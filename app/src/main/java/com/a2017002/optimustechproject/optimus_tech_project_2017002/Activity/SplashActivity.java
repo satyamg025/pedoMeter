@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.R;
+import com.a2017002.optimustechproject.optimus_tech_project_2017002.util.DbHandler;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -58,10 +59,16 @@ public class SplashActivity extends AppCompatActivity {
                 } catch (Exception e) {
 
                 } finally {
-
-                    Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
-                    startActivity(intent);
-                    finish();
+                    if(DbHandler.getBoolean(SplashActivity.this,"isLoggedIn",false)){
+                        Intent intent = new Intent(SplashActivity.this,NavigationActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else {
+                        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             };
         };

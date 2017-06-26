@@ -14,8 +14,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
-
-    public static String API_BASE_URL = "http://192.168.43.21/optimus/index.php/";
+    public static String API_BASE_URL = "http://optimustechproject2017002.000webhostapp.com/optimus/optimus/index.php/";
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
             .connectTimeout(60, TimeUnit.SECONDS);
 

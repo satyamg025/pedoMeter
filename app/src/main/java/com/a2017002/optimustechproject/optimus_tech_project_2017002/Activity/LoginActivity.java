@@ -57,8 +57,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         toolbar=(Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         toolbar.setTitle("Login");
+        setSupportActionBar(toolbar);
 
         username=(EditText)findViewById(R.id.username);
         password=(EditText)findViewById(R.id.password);
@@ -125,6 +125,9 @@ public class LoginActivity extends AppCompatActivity {
                     if(!loginDataPOJO.getErrror()){
                         Toast.makeText(LoginActivity.this,loginDataPOJO.getMessage(),Toast.LENGTH_LONG).show();
                         DbHandler.setSession(LoginActivity.this,gson.toJson(data),data.getKey());
+                        Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                     else{
                         new AlertDialog.Builder(LoginActivity.this)

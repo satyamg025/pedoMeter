@@ -3,6 +3,7 @@ package com.a2017002.optimustechproject.optimus_tech_project_2017002.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -64,8 +65,8 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
 
         toolbar=(Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         toolbar.setTitle("Join Us");
+        setSupportActionBar(toolbar);
 
         first_name=(EditText)findViewById(R.id.first_name);
         last_name=(EditText)findViewById(R.id.last_name);
@@ -194,6 +195,9 @@ public class RegistrationActivity extends AppCompatActivity {
                     if(!regDataPOJO.getError()){
                         Toast.makeText(RegistrationActivity.this,regDataPOJO.getMessage(),Toast.LENGTH_LONG).show();
                         DbHandler.setSession(RegistrationActivity.this,gson.toJson(data),data.getKey());
+                        Intent intent = new Intent(RegistrationActivity.this, NavigationActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                     else{
                         new AlertDialog.Builder(RegistrationActivity.this)
