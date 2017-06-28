@@ -20,6 +20,15 @@ public class RegDataumPOJO {
     @SerializedName("gender")
     @Expose
     private String gender;
+    @SerializedName("height")
+    @Expose
+    private String height;
+    @SerializedName("weight")
+    @Expose
+    private String weight;
+    @SerializedName("mobile")
+    @Expose
+    private String mobile;
     @SerializedName("key")
     @Expose
     private String key;
@@ -56,8 +65,28 @@ public class RegDataumPOJO {
         this.gender = gender;
     }
 
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
     public String getKey() {
         return key;
+    }
+
+    public String getMobile(){
+        return mobile;
     }
 
     public void setKey(String key) {

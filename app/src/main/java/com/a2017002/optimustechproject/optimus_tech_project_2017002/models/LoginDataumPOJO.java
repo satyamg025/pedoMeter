@@ -9,9 +9,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class LoginDataumPOJO {
 
-    @SerializedName("key")
-    @Expose
-    private String key;
     @SerializedName("first_name")
     @Expose
     private String firstName;
@@ -24,14 +21,18 @@ public class LoginDataumPOJO {
     @SerializedName("gender")
     @Expose
     private String gender;
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
+    @SerializedName("height")
+    @Expose
+    private String height;
+    @SerializedName("weight")
+    @Expose
+    private String weight;
+    @SerializedName("mobile")
+    @Expose
+    private String mobile;
+    @SerializedName("key")
+    @Expose
+    private String key;
 
     public String getFirstName() {
         return firstName;
@@ -63,5 +64,33 @@ public class LoginDataumPOJO {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getMobile(){
+        return mobile;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

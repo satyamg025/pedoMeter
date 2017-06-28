@@ -2,6 +2,9 @@ package com.a2017002.optimustechproject.optimus_tech_project_2017002.networking;
 
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -23,11 +26,15 @@ public class ServiceGenerator {
 //                    .baseUrl(API_BASE_URL)
 //                    .addConverterFactory(GsonConverterFactory.create());
 
+    static Gson gson = new GsonBuilder()
+            .setLenient()
+            .create();
+
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
                     .baseUrl(API_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.create());
+                    .addConverterFactory(GsonConverterFactory.create(gson));
+            //.addCallAdapterFactory(RxJavaCallAdapterFactory.create());
 
     public static <S> S createService(Class<S> serviceClass) {
         Retrofit retrofit = builder.client(httpClient.build()).build();

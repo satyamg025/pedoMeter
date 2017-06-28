@@ -13,5 +13,5 @@ import rx.Observable;
 
 public interface LoginRequest {
     @GET("Optimus_cont/login")
-    Observable<LoginDataPOJO> requestResponse(@Query("fcm") String fcm);
+    Call<LoginDataPOJO> requestResponse(@Query("fcm") String fcm);
 }

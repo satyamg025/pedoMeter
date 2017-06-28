@@ -129,26 +129,26 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="Height (in cm)"
-                            android:textColor="@color/colorPrimary" />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/height_tv"
-                            android:layout_marginTop="10dp"
-                            android:gravity="right"
-                            android:text="0 cm"/>
-                        ></LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Height (in cm)"
+                        android:textColor="@color/colorPrimary" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/height_tv"
+                        android:layout_marginTop="10dp"
+                        android:gravity="right"
+                        android:text="0 cm"/>
+                    ></LinearLayout>
                     <!--<EditText-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:hint="176 cm"-->
-                    <!--android:id="@+id/height"-->
-                    <!--android:inputType="number"/>-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:hint="176 cm"-->
+                        <!--android:id="@+id/height"-->
+                        <!--android:inputType="number"/>-->
                     <SeekBar
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -201,32 +201,6 @@
                         android:focusable="false"
                         android:textSize="17dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:textColor="@color/colorPrimary"
-                        android:text="Email"/>
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/username"
-                        android:hint="xyz@abc.com"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="Password"
-                        android:textColor="@color/colorPrimary"
-                        android:inputType="textEmailAddress"/>
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="*******"
-                        android:password="true"
-                        android:id="@+id/password"
-                        android:inputType="textPassword"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 

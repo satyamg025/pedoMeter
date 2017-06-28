@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,11 +29,6 @@ import com.google.gson.Gson;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -103,48 +99,47 @@ public class LoginActivity extends AppCompatActivity {
             progressDialog.show();
 
             LoginRequest loginRequest= ServiceGenerator.createService(LoginRequest.class,username.getText().toString(),password.getText().toString());
-            Observable<LoginDataPOJO> observable=loginRequest.requestResponse(FirebaseInstanceId.getInstance().getToken());
-            observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<LoginDataPOJO>() {
+            Call<LoginDataPOJO> call=loginRequest.requestResponse(FirebaseInstanceId.getInstance().getToken());
+            call.enqueue(new Callback<LoginDataPOJO>() {
                 @Override
-                public void onCompleted() {
+                public void onResponse(Call<LoginDataPOJO> call, Response<LoginDataPOJO> response) {
+                    if(response.code()==200){
+                        progressDialog.dismiss();
+                        Log.e("login",String.valueOf(response.body().getErrror()));
+                        LoginDataumPOJO data=response.body().getData();
+                        if(!response.body().getErrror()){
+                            Toast.makeText(LoginActivity.this,response.body().getMessage(),Toast.LENGTH_LONG).show();
+                            DbHandler.setSession(LoginActivity.this,gson.toJson(data),data.getKey());
+                            Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        else{
+                            new AlertDialog.Builder(LoginActivity.this)
+                                    .setMessage(response.body().getMessage())
+                                    .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // onBackPressed();
+                                        }
+                                    }).show();
 
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    progressDialog.dismiss();
-                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Error connecting to server", Snackbar.LENGTH_SHORT);
-                    coloredSnackBar.warning(snackbar).show();
-
-                }
-
-                @Override
-                public void onNext(LoginDataPOJO loginDataPOJO) {
-                    progressDialog.dismiss();
-                    LoginDataumPOJO data=loginDataPOJO.getData();
-                    if(!loginDataPOJO.getErrror()){
-                        Toast.makeText(LoginActivity.this,loginDataPOJO.getMessage(),Toast.LENGTH_LONG).show();
-                        DbHandler.setSession(LoginActivity.this,gson.toJson(data),data.getKey());
-                        Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
-                        startActivity(intent);
-                        finish();
+                        }
                     }
                     else{
-                        new AlertDialog.Builder(LoginActivity.this)
-                                .setMessage(loginDataPOJO.getMessage())
-                                .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // onBackPressed();
-                                    }
-                                });
-
+                        progressDialog.dismiss();
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Error connecting to server", Snackbar.LENGTH_SHORT);
+                        coloredSnackBar.warning(snackbar).show();
                     }
-
-
-
                 }
 
+                @Override
+                public void onFailure(Call<LoginDataPOJO> call, Throwable t) {
+                    progressDialog.dismiss();
+                    Log.e("loginerror",String.valueOf(t));
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Error connecting to server", Snackbar.LENGTH_SHORT);
+                    coloredSnackBar.warning(snackbar).show();
+                }
             });
 
 
