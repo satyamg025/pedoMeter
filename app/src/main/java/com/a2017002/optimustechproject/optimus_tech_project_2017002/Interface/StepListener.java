@@ -1,4 +1,4 @@
-package com.a2017002.optimustechproject.optimus_tech_project_2017002.util;
+package com.a2017002.optimustechproject.optimus_tech_project_2017002.Interface;
 
 /**
  * Created by satyam on 26/6/17.

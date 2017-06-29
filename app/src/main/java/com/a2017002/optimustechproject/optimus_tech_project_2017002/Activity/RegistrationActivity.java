@@ -182,7 +182,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     weight.setError("Weight required");
                 }
                 if(height_tv.getText().toString().equals("0 cm")){
-                    Toast.makeText(RegistrationActivity.this,"Height requires",Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegistrationActivity.this,"Height required",Toast.LENGTH_LONG).show();
                 }
                 if(gender.equals("J")){
                     Toast.makeText(RegistrationActivity.this,"Select your gender",Toast.LENGTH_LONG).show();

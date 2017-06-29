@@ -41,10 +41,6 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -109,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
             img.setImageDrawable(getResources().getDrawable(R.drawable.female_account));
         }
 
-        weight.setText(data.getWeight()+" kg");
+        weight.setText(data.getWeight());
         height.setProgress(Integer.valueOf(data.getHeight()));
         height_tv.setText(data.getHeight()+" cm");
 
@@ -200,7 +196,7 @@ public class ProfileActivity extends AppCompatActivity {
                     weight.setError("Weight required");
                 }
                 if(height_tv.getText().toString().equals("0 cm")){
-                    Toast.makeText(ProfileActivity.this,"Height requires",Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProfileActivity.this,"Height required",Toast.LENGTH_LONG).show();
                 }
                 if(gender.equals("J")){
                     Toast.makeText(ProfileActivity.this,"Select your gender",Toast.LENGTH_LONG).show();

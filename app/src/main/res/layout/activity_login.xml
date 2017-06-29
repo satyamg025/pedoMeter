@@ -11,6 +11,7 @@
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:id="@+id/appbar"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar">
@@ -31,7 +32,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="90dp"
             tools:context=".Fragment.LoginFragment"
             android:layout_centerHorizontal="true"
             android:layout_weight="1"
@@ -120,28 +121,28 @@
                             />
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
-
-               <Button
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:text="New User"
-                   android:background="@android:color/transparent"
-                   android:textSize="14dp"
-                   android:id="@+id/register"
-                   android:textColor="@color/colorPrimaryDark"
-                   android:layout_marginBottom="10dp"
-                   />
-
                 <Button
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:background="@color/colorPrimary"
                     android:text="LOGIN"
                     android:id="@+id/login"
+                    android:layout_marginTop="10dp"
                     android:textColor="#ffff"
                     android:layout_gravity="center_horizontal"
                     android:textSize="15sp"
                     />
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="New User"
+                    android:background="@android:color/transparent"
+                    android:textSize="14dp"
+                    android:id="@+id/register"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_marginBottom="10dp"
+                    />
+
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>

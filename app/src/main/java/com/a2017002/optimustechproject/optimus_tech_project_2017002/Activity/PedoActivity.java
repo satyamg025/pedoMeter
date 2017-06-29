@@ -6,7 +6,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
@@ -23,7 +22,7 @@ import com.a2017002.optimustechproject.optimus_tech_project_2017002.R;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.models.LoginDataumPOJO;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.util.DbHandler;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.util.SimpleStepDetector;
-import com.a2017002.optimustechproject.optimus_tech_project_2017002.util.StepListener;
+import com.a2017002.optimustechproject.optimus_tech_project_2017002.Interface.StepListener;
 import com.google.gson.Gson;
 
 @SuppressLint("HandlerLeak")
@@ -145,6 +144,7 @@ public class PedoActivity extends AppCompatActivity implements SensorEventListen
                     stop_boo=false;
                     pause_boo=false;
                     pause.setEnabled(true);
+                    stop.setText("STOP");
                 }
 
             }
@@ -179,9 +179,9 @@ public class PedoActivity extends AppCompatActivity implements SensorEventListen
             float distance = (Float.valueOf("0.415")*Float.valueOf(data.getHeight())*numSteps)/100;
             //Toast.makeText(PedoActivity.this,String.valueOf(Float.valueOf("0.415")*Float.valueOf(data.getHeight())),Toast.LENGTH_LONG).show();
 
-            distance_tv.setText(String.format("%02f",distance)+" m");
+            distance_tv.setText(String.format("%.2f",distance)+" m");
 
-            speed_tv.setText(String.format("%02f",Float.valueOf(distance)/(Float.valueOf(Seconds)))+" m/s");
+            speed_tv.setText(String.format("%.2f",Float.valueOf(distance)/(Float.valueOf(Seconds)))+" m/s");
             //Toast.makeText(PedoActivity.this,String.valueOf(Float.valueOf("0.415")*Float.valueOf(data.getHeight())),Toast.LENGTH_LONG).show();
 
             handler.postDelayed(this, 0);
@@ -193,14 +193,14 @@ public class PedoActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onResume() {
         super.onResume();
-        numSteps = 0;
+       // numSteps = 0;
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        sensorManager.unregisterListener(this);
+       // sensorManager.unregisterListener(this);
     }
 
     @Override
