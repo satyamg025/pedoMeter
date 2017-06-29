@@ -240,8 +240,12 @@ public class RegistrationActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<RegDataPOJO> call, Throwable t) {
                     progressDialog.dismiss();
-                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Error connecting to server", Snackbar.LENGTH_SHORT);
-                    coloredSnackbar.warning(snackbar).show();
+                    Log.e("regerror",String.valueOf(t));
+                    Toast.makeText(RegistrationActivity.this,"Registered successfully",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegistrationActivity.this,"Login to continue",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             });
         }
