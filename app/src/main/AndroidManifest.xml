@@ -39,7 +39,8 @@
             android:name=".Activity.VideoActivity"
             android:configChanges="orientation"
             android:screenOrientation="landscape" />
-        <activity android:name=".Activity.StopActivity"></activity>
+        <activity android:name=".Activity.StopActivity" />
+        <activity android:name=".Activity.ShareActivity" />
     </application>
 
 </manifest>

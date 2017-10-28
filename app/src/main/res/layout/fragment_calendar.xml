@@ -1,38 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_color"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    tools:context=".Activity.NavigationActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cal_card"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryDark"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardUseCompatPadding="true">
 
-   <com.imanoweb.calendarview.CustomCalendarView
-        android:id="@+id/calendar_view"
+        <TextView
+            android:id="@+id/cal_event"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimaryDark"
+            android:layout_width="match_parent"
+            android:text="Today"
+            android:layout_height="match_parent"/>
+
+    </android.support.v7.widget.CardView>
+    <FrameLayout
+        android:id="@+id/flContent"
+        android:layout_above="@id/cal_card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/off_white"
-
-        app:calendarBackgroundColor="@color/off_white"
-        app:currentDayOfMonthColor="@color/blue"
-        app:dayOfMonthTextColor="@color/black"
-        app:dayOfWeekTextColor="@color/black"
-        app:disabledDayBackgroundColor="@color/off_white"
-        app:disabledDayTextColor="@color/grey"
-        app:selectedDayBackgroundColor="@color/blue"
-        app:titleLayoutBackgroundColor="@color/white"
-        app:weekLayoutBackgroundColor="@color/white"/>
-
-
-    <TextView
-        android:id="@+id/selected_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:textColor="@color/grey"
-        android:textStyle="bold"/>
-</LinearLayout>
+        android:layout_height="match_parent" />
+</RelativeLayout>

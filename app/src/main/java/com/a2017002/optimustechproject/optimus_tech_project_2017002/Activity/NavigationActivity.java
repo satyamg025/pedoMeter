@@ -1,11 +1,13 @@
 package com.a2017002.optimustechproject.optimus_tech_project_2017002.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,18 +17,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.a2017002.optimustechproject.optimus_tech_project_2017002.Interface.ActivityDataRequest;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.R;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.fragments.CalendarFragment;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.fragments.StartActivityFragment;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.fragments.VideoFragment;
+import com.a2017002.optimustechproject.optimus_tech_project_2017002.models.ActivityDataPOJO;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.models.LoginDataumPOJO;
+import com.a2017002.optimustechproject.optimus_tech_project_2017002.networking.ServiceGenerator;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.util.ColoredSnackbar;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.util.DbHandler;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.util.ImageTransform;
+import com.a2017002.optimustechproject.optimus_tech_project_2017002.util.NetworkCheck;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -38,6 +43,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -48,6 +57,7 @@ public class NavigationActivity extends AppCompatActivity
     Boolean doubleBackToExitPressedOnce=false;
     Handler handler;
     NavigationView navigationView;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +98,43 @@ public class NavigationActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        if(NetworkCheck.isNetworkAvailable(NavigationActivity.this)){
+
+            progressDialog=new ProgressDialog(NavigationActivity.this);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            ActivityDataRequest activityDataRequest= ServiceGenerator.createService(ActivityDataRequest.class,DbHandler.getString(this,"bearer",""));
+            Call<ActivityDataPOJO> call=activityDataRequest.requestResponse();
+            call.enqueue(new Callback<ActivityDataPOJO>() {
+                @Override
+                public void onResponse(Call<ActivityDataPOJO> call, Response<ActivityDataPOJO> response) {
+
+                    progressDialog.dismiss();
+                    if(response.code()==200){
+                        if(response.body().getError()){
+                            DbHandler.unsetSession(NavigationActivity.this,"isForcedLoggedOut");
+                        }
+                        else{
+
+                            DbHandler.putString(NavigationActivity.this,"activity_detail",gson.toJson(response.body().getData()));
+                            Log.e("data",String.valueOf(response.body().getData().getDate()));
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ActivityDataPOJO> call, Throwable t) {
+                    progressDialog.dismiss();
+                    Log.e("error",String.valueOf(t));
+
+                }
+            });
+
+        }
 
 
 

@@ -1,6 +1,8 @@
 package com.a2017002.optimustechproject.optimus_tech_project_2017002.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -9,6 +11,7 @@ import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,12 +21,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.a2017002.optimustechproject.optimus_tech_project_2017002.Interface.StoreActivityRequest;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.R;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.models.LoginDataumPOJO;
+import com.a2017002.optimustechproject.optimus_tech_project_2017002.models.StoreActivityPOJO;
+import com.a2017002.optimustechproject.optimus_tech_project_2017002.networking.ServiceGenerator;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.util.DbHandler;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.util.SimpleStepDetector;
 import com.a2017002.optimustechproject.optimus_tech_project_2017002.Interface.StepListener;
 import com.google.gson.Gson;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @SuppressLint("HandlerLeak")
 public class PedoActivity extends AppCompatActivity implements SensorEventListener,StepListener {
@@ -41,6 +55,7 @@ public class PedoActivity extends AppCompatActivity implements SensorEventListen
 
     LoginDataumPOJO data;
     Gson gson=new Gson();
+    ProgressDialog progressDialog;
 
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
 
@@ -117,35 +132,177 @@ public class PedoActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View view) {
 
-                if(stop.getText().toString().equals("STOP")) {
+                TimeBuff += MillisecondTime;
 
-                    handler.removeCallbacks(runnable);
+                handler.removeCallbacks(runnable);
 
-                    MillisecondTime = 0L;
-                    StartTime = 0L;
-                    TimeBuff = 0L;
-                    UpdateTime = 0L;
-                    Seconds = 0;
-                    Minutes = 0;
-                    MilliSeconds = 0;
+                stop.setEnabled(true);
 
-                    stop_boo = true;
+                pause.setText("RESUME");
+                pause_boo=true;
 
-                    pause.setText("PAUSE");
-                    //stop.setEnabled(false);
-                    pause.setEnabled(false);
+                new AlertDialog.Builder(PedoActivity.this).setCancelable(false)
+                        .setMessage("Are you sure you want to stop this acitvity?")
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                    stop.setText("START");
-                }
-                else{
-                    StartTime = SystemClock.uptimeMillis();
-                    handler.postDelayed(runnable, 0);
+                                progressDialog=new ProgressDialog(PedoActivity.this);
+                                progressDialog.setIndeterminate(true);
+                                progressDialog.setMessage("Loading...");
+                                progressDialog.setCancelable(false);
+                                progressDialog.show();
 
-                    stop_boo=false;
-                    pause_boo=false;
-                    pause.setEnabled(true);
-                    stop.setText("STOP");
-                }
+                                String dateString =String.valueOf(new Date());
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                Date convertedDate = new Date();
+                                try {
+                                    convertedDate=dateFormat.parse(dateString);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+                                StoreActivityRequest storeActivityRequest= ServiceGenerator.createService(StoreActivityRequest.class,DbHandler.getString(PedoActivity.this,"bearer",""));
+                                Call<StoreActivityPOJO> call=storeActivityRequest.requestResponse(distance_tv.getText().toString(),speed_tv.getText().toString(),time_tv.getText().toString(),String.valueOf(convertedDate));
+                                call.enqueue(new Callback<StoreActivityPOJO>() {
+                                    @Override
+                                    public void onResponse(Call<StoreActivityPOJO> call, Response<StoreActivityPOJO> response) {
+
+                                        progressDialog.dismiss();
+                                        if(response.code()==200){
+                                            if(response.body().getError()){
+                                                DbHandler.unsetSession(PedoActivity.this,"isForcedLoggedOut");
+                                            }
+                                            else{
+                                                handler.removeCallbacks(runnable);
+
+                                                MillisecondTime = 0L;
+                                                StartTime = 0L;
+                                                TimeBuff = 0L;
+                                                UpdateTime = 0L;
+                                                Seconds = 0;
+                                                Minutes = 0;
+                                                MilliSeconds = 0;
+
+                                                stop_boo = true;
+
+                                                pause.setText("PAUSE");
+                                                pause.setEnabled(false);
+
+                                                Intent intent=new Intent(PedoActivity.this,ShareActivity.class);
+
+                                                intent.putExtra("distance",distance_tv.getText().toString());
+                                                intent.putExtra("speed",speed_tv.getText().toString());
+                                                intent.putExtra("time",time_tv.getText().toString());
+                                                intent.putExtra("date",String.valueOf(new Date()));
+
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        }
+                                        else{
+
+                                            new AlertDialog.Builder(PedoActivity.this)
+                                                    .setCancelable(false)
+                                                    .setTitle("Network Error")
+                                                    .setMessage("There was some error in connecting to server\nPlease check your internet connection to store your activity\nelse you will lose your activity data")
+                                                    .setPositiveButton("Connect to internet", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Continue", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+
+                                                            handler.removeCallbacks(runnable);
+
+                                                            MillisecondTime = 0L;
+                                                            StartTime = 0L;
+                                                            TimeBuff = 0L;
+                                                            UpdateTime = 0L;
+                                                            Seconds = 0;
+                                                            Minutes = 0;
+                                                            MilliSeconds = 0;
+
+                                                            stop_boo = true;
+
+                                                            pause.setText("PAUSE");
+                                                            pause.setEnabled(false);
+
+                                                            Intent intent=new Intent(PedoActivity.this,ShareActivity.class);
+                                                            intent.putExtra("distance",distance_tv.getText().toString());
+                                                            intent.putExtra("speed",speed_tv.getText().toString());
+                                                            intent.putExtra("time",time_tv.getText().toString());
+                                                            intent.putExtra("date",String.valueOf(new Date()));
+                                                            startActivity(intent);
+
+                                                            finish();
+
+                                                        }
+                                                    }).create().show();
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<StoreActivityPOJO> call, Throwable t) {
+
+                                        progressDialog.dismiss();
+                                        new AlertDialog.Builder(PedoActivity.this)
+                                                .setCancelable(false)
+                                                .setTitle("Network Error")
+                                                .setMessage("There was some error in connecting to server\nPlease check your internet connection to store your activity\nelse you will lose your activity data")
+                                                .setPositiveButton("Connect to internet", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                })
+                                                .setNegativeButton("Continue", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                        handler.removeCallbacks(runnable);
+
+                                                        MillisecondTime = 0L;
+                                                        StartTime = 0L;
+                                                        TimeBuff = 0L;
+                                                        UpdateTime = 0L;
+                                                        Seconds = 0;
+                                                        Minutes = 0;
+                                                        MilliSeconds = 0;
+
+                                                        stop_boo = true;
+
+                                                        pause.setText("PAUSE");
+                                                        pause.setEnabled(false);
+
+                                                        Intent intent=new Intent(PedoActivity.this,ShareActivity.class);
+                                                        intent.putExtra("distance",distance_tv.getText().toString());
+                                                        intent.putExtra("speed",speed_tv.getText().toString());
+                                                        intent.putExtra("time",time_tv.getText().toString());
+                                                        intent.putExtra("date",String.valueOf(new Date()));
+                                                        startActivity(intent);
+
+                                                        finish();
+
+                                                    }
+                                                }).create().show();
+
+                                    }
+                                });
+
+
+                            }
+                        }).create().show();
 
             }
         });
